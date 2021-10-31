@@ -1,0 +1,23 @@
+{
+    "name": "cg-webworker",
+    "version": "1.0.0",
+    "description": "",
+    "author": "CarGurus, Inc.",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cargurus/cg-webworker"
+    },
+    "main": "index.cjs.js",
+    "module": "index.js",
+    "dependencies": {
+        "uuid": ">=3.0.1"
+    },
+    "devDependencies": {
+        "@types/uuid": ">=3.0.1"
+    },
+    "optionalDependencies": {
+        "react": ">=16.8",
+        "react-dom": ">=16.8"
+    }
+}

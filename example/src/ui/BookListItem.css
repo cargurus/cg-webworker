@@ -1,0 +1,52 @@
+.bookListItem {
+    display: grid;
+    gap: 10px;
+    width: 600px;
+    max-width: 600px;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+        "title thumbnail"
+        "info thumbnail"
+        "wordcloud wordcloud";
+    margin: 0.5rem;
+    margin-bottom: auto;
+    border: 3px solid #886F68;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #424C55;
+    color: #F5EDF0;
+}
+
+.infoContainer {
+    grid-area: info;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-content: start;
+    grid-gap: 0.5rem;
+}
+
+.title {
+    grid-area: title;
+}
+
+.label {
+    font-weight: 700;
+}
+
+.field {
+    text-overflow: ellipsis;
+}
+
+.coverImage {
+    grid-area: thumbnail;
+    display: block;
+    width: 197px;
+    height: 147px;
+}
+.wordCloudContainer {
+    grid-area: wordcloud;
+}
+.wordCloudCanvas {
+    width: 100%;
+    height: 25rem;
+}

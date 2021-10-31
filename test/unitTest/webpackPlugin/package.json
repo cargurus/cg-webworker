@@ -1,0 +1,19 @@
+{
+  "name": "@cg-webworker/webpack-test-fake-package-json",
+  "version": "1.0.0",
+  "description": "This file is used only for testing the WorkerBundleIntegrityTestPlugin webpack plugin, as sideEffects is pulled directly from here.",
+  "private": true,
+  "author": "CarGurus, Inc.",
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+  },
+  "dependencies": {
+    "regenerator-runtime": "^0.13.7"
+  },
+  "devDependencies": {
+    "terser-webpack-plugin": "^5.1.4",
+    "webpack": "^5.41.1",
+    "webpack-merge": "^5.8.0"
+  }
+}

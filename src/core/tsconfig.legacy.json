@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+
+        "sourceMap": true,
+        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "declaration": true,
+        "allowJs": false,
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
+        "noImplicitReturns": true,
+        "downlevelIteration": true,
+        "emitDeclarationOnly": true,
+        "declarationDir": "../../dist/legacy",
+
+        "allowUnreachableCode": true,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+    },
+    "include": [
+      "**/*.ts",
+      "**/*.tsx"
+    ]
+}

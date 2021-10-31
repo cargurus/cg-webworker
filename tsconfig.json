@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "sourceRoot": "./",
+        "sourceMap": true,
+        "strict": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "jsx": "preserve",
+        "noImplicitReturns": true,
+        "downlevelIteration": true,
+        "noEmit": true,
+        "noImplicitAny": true,
+
+        "allowUnreachableCode": true,
+
+        "paths": {
+            "cg-webworker/core": ["./src/core"],
+            "cg-webworker/datastore": ["./src/datastore"],
+            "cg-webworker/react": ["./src/react"],
+        },
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "test/**/*.ts",
+      "src/**/*.spec.tsx"
+    ],
+    "excludeDirectories": [
+        "**/node_modules",
+        "dist",
+        "example"
+    ]
+}
+// Typescript config for type-checking of Lib and Tests (named as default, so it can be used by IDE)
