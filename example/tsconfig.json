@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "rootDir": "./",
+        "baseUrl": "../",
+        "sourceRoot": "./example",
+        "sourceMap": true,
+        "strict": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "jsx": "preserve",
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "noImplicitReturns": true,
+        "downlevelIteration": true,
+        "noEmit": true,
+        "noImplicitAny": true,
+        "paths": {
+            "cg-webworker/*": ["./dist/*"],
+        },
+        "allowUnreachableCode": true,
+        "types": [
+            "./types/declaration"
+        ]
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "excludeDirectories": [
+        "**/node_modules",
+        "../dist"
+    ],
+}

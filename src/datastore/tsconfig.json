@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+
+        "sourceMap": true,
+        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "declaration": true,
+        "allowJs": false,
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
+        "noImplicitReturns": true,
+        "downlevelIteration": true,
+        "emitDeclarationOnly": true,
+        "declarationDir": "../../dist",
+
+        "allowUnreachableCode": true,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "paths": {
+            "cg-webworker/core": ["../../dist/core"],
+        }
+    },
+    "include": [
+      "**/*.ts",
+      "**/*.tsx"
+    ]
+}

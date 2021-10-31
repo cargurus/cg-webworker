@@ -1,0 +1,6 @@
+.filters {
+    display: grid;
+    justify-content: start;
+    gap: 1rem;
+    align-content: start;
+}

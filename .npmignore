@@ -1,0 +1,17 @@
+/hashes_file.conf
+/images/
+node_modules
+dist
+.cache
+.coverage
+.tmp
+.nyc_output
+*.log
+.eslintcache
+.stylelintcache
+
+### VisualStudioCode shared snippets ###
+!.vscode
+.vscode/*
+!.vscode/ftl-template.code-snippets
+.awcache
