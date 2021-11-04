@@ -93,7 +93,7 @@ export const createWorkProcessor = <
                             requestId: requestId,
                             message: responseMessage,
                         },
-                        responseMessage.transferrables
+                        responseMessage.transferrables as Transferable[]
                     );
                 } else {
                     ctx.worker.postMessage({

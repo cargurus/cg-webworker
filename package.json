@@ -63,6 +63,7 @@
         "@types/faker": "^5.5.7",
         "@types/jest": "25.x.x",
         "@types/node": "12.x.x",
+        "@types/offscreencanvas": "^2019.6.4",
         "@types/puppeteer": "^5.4.3",
         "@types/react": "16.9.56",
         "@types/react-dom": "16.9.8",
