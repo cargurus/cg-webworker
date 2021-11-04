@@ -23,7 +23,7 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
     it('should fail when error thrown during dependency setup', (done) => {
         webpack(failDuringSetupDependenciesConfig, function (err, stats) {
             try {
@@ -40,7 +40,7 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
     it('should fail when error thrown during datastore init', (done) => {
         webpack(failDuringDatastoreInitConfig, function (err, stats) {
             try {
@@ -58,7 +58,7 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
     it('should fail when service registry import uses unknown globals', (done) => {
         webpack(failDuringServiceRegistryImportConfig, function (err, stats) {
             try {
@@ -75,7 +75,7 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
     it('should pass when no worker-breaking code used', (done) => {
         webpack(successConfig, function (err, stats) {
             try {
@@ -88,7 +88,7 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
     it('should pass when violation in tree-shaken module', (done) => {
         webpack(passWhenTreeshakenConfig, function (err, stats) {
             try {
@@ -101,5 +101,5 @@ describe('WorkerBundleIntegrityTestPlugin', () => {
                 done(ex);
             }
         });
-    });
+    }, 30000);
 });
