@@ -19,13 +19,12 @@ interface FiltersProps {
     className?: string | string[];
 }
 export const Filters = ({ className }: FiltersProps) => {
-    const [bookCollectionInfo, setBookCollectionInfo] =
-        React.useState<null | {
-            authors: Map<string, number>;
-            publishers: Map<string, number>;
-            bookLengths: { min: number; max: number };
-            publishDates: { min: Date; max: Date };
-        }>(null);
+    const [bookCollectionInfo, setBookCollectionInfo] = React.useState<null | {
+        authors: Map<string, number>;
+        publishers: Map<string, number>;
+        bookLengths: { min: number; max: number };
+        publishDates: { min: Date; max: Date };
+    }>(null);
 
     const dataSize = useSelector((state: RootState) => state.dataLoader.dataSize);
 

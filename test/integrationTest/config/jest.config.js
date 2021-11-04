@@ -27,4 +27,6 @@ module.exports = {
 
     globalSetup: path.join(__dirname, 'server-setup.js'),
     globalTeardown: path.join(__dirname, 'server-teardown.js'),
+
+    testTimeout: 30000,
 };

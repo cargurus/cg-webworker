@@ -28,8 +28,7 @@
     "include": [
       "src/**/*.ts",
       "src/**/*.tsx",
-      "test/**/*.ts",
-      "src/**/*.spec.tsx"
+      "test/**/*.ts"
     ],
     "excludeDirectories": [
         "**/node_modules",

@@ -27,7 +27,15 @@ export default {
             sourcemap: false,
         },
     ],
-    external: [coreSrcDir, datastoreSrcDir, 'cg-webworker/core', 'cg-webworker/datastore', 'react', 'react-dom', 'uuid'],
+    external: [
+        coreSrcDir,
+        datastoreSrcDir,
+        'cg-webworker/core',
+        'cg-webworker/datastore',
+        'react',
+        'react-dom',
+        'uuid',
+    ],
     treeshake: true,
     plugins: [
         alias({

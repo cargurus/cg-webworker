@@ -106,7 +106,7 @@ const processInitializationRequest = <
             onSetupDependenciesError
         );
     } catch (ex) {
-        onSetupDependenciesError(ex);
+        onSetupDependenciesError(ex as Error);
     }
 };
 
@@ -186,7 +186,7 @@ export const setupCallBroker = <
                     return Promise.reject(ex);
                 });
         } catch (ex) {
-            onServiceRegistryImportError(ex);
+            onServiceRegistryImportError(ex as Error);
         }
     };
 
