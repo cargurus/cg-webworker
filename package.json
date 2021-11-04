@@ -15,7 +15,8 @@
         "yarn": ">=1.12.x"
     },
     "resolutions": {
-        "@types/react": "16.9.56"
+        "@types/react": "16.9.56",
+        "@types/react-dom": "16.9.8"
     },
     "scripts": {
         "prebuild": "rimraf ./dist",
@@ -63,10 +64,10 @@
         "@types/jest": "25.x.x",
         "@types/node": "12.x.x",
         "@types/puppeteer": "^5.4.3",
-        "@types/react": "^16.9.8",
-        "@types/react-dom": "^16.9.8",
-        "@types/react-redux": "^7.1.18",
-        "@types/react-window": "^1.8.4",
+        "@types/react": "16.9.56",
+        "@types/react-dom": "16.9.8",
+        "@types/react-redux": "7.1.18",
+        "@types/react-window": "1.8.4",
         "@types/uuid": ">=3.0.1",
         "@typescript-eslint/eslint-plugin": "^4.24.0",
         "@typescript-eslint/parser": "^4.24.0",
@@ -95,9 +96,9 @@
         "jest-puppeteer": "^5.0.4",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
-        "react": ">=16.8",
+        "react": "16.9.0",
         "react-dev-utils": "^11.0.4",
-        "react-dom": ">=16.8",
+        "react-dom": "16.9.0",
         "react-redux": "^7.2.4",
         "react-window": "^1.8.6",
         "redux": "^4.1.0",
