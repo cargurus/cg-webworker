@@ -42,7 +42,7 @@ function workProcessor<
         }
     } catch (ex) {
         try {
-            onError(ex);
+            onError(ex as Error);
         } catch (innerEx) {
             /* ignore */
         }
