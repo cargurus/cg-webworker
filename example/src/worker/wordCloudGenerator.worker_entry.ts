@@ -1,7 +1,6 @@
 import './applyPolyfills';
 import type { Book } from '../domain/book';
 import d3Cloud, { Word } from './d3-cloud';
-import { WebWorker } from 'cg-webworker/core';
 
 self.onmessage = (
     ev: MessageEvent<{
