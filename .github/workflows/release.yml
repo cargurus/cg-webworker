@@ -1,0 +1,72 @@
+name: Release to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '"major", "minor", "patch", or "custom"'
+        required: true
+      custom:
+        description: 'if version is custom, this is what will be used for the npm release'
+        required: false
+
+jobs:
+  release-to-npm:
+    runs-on: ubuntu-latest
+    environment: NPM Production release
+    
+    steps:
+      - name: Validate input params
+        if: ${{ inputs:version }} != 'major' && ${{ inputs:version }} != 'minor' && ${{ inputs:version }} != 'patch' && (${{ inputs:version }} != 'custom' || ${{ inputs:version }} == 'custom' && ${{inputs:custom}} == '')
+        run: exit(1)
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - uses: actions/setup-node@master
+        with:
+          node-version: '12'
+
+      - uses: c-hive/gha-yarn-cache@v2
+      
+      - name: Install node modules
+        run: |
+          yarn install --frozen-lockfile
+          
+      - name: Run linting
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test
+        
+      - name: Update patch version
+        if: ${{ inputs:version }} == 'patch'
+        run: npm version --patch
+      - name: Update minor version
+        if: ${{ inputs:version }} == 'minor'
+        run: npm version --minor
+      - name: Update major version
+        if: ${{ inputs:version }} == 'major'
+        run: npm version --major
+
+      # - name: Update custom version
+      #   if: ${{ inputs:version }} == 'custom' && ${{inputs:custom}} != ''
+      #   run: npm version --patch
+
+      - name: Build version
+        if: ${{ inputs:version }} != 'custom'
+        run: |
+          cross-env NODE_ENV=production yarn build
+
+      - name: Build with custom version
+        if: ${{ inputs:version }} == 'custom'
+        run: |
+          cross-env NODE_ENV=production PUBLISH_VERSION=${{ inputs.custom }} yarn build
+
+      - name: Publish package
+        run: npm publish --access public --token ${{ env.NPM_AUTH_TOKEN }}
+
+      - name: Push tags to repo
+        if: ${{ inputs:version }} == 'major' || ${{ inputs:version }} == 'minor' || ${{ inputs:version }} == 'patch'
+        run: git push && git push --tags
+        
