@@ -22,15 +22,27 @@ function updatePublishVersion() {
 }
 
 fs.copyFile(
-    path.resolve(__dirname, './npm_dist_package.json'),
-    path.resolve(__dirname, '../dist/package.json'),
+    path.resolve(__dirname, '../.npmrc'),
+    path.resolve(__dirname, '../dist/.npmrc'),
     function (err) {
         if (err) {
             // eslint-disable-next-line no-console
-            console.error('ERROR: ' + err);
+            console.error('ERROR: couldn\'t copy npmrc ' + err);
             process.exitCode = 1;
         } else {
-            updatePublishVersion();
+            fs.copyFile(
+                path.resolve(__dirname, './npm_dist_package.json'),
+                path.resolve(__dirname, '../dist/package.json'),
+                function (err) {
+                    if (err) {
+                        // eslint-disable-next-line no-console
+                        console.error('ERROR: ' + err);
+                        process.exitCode = 1;
+                    } else {
+                        updatePublishVersion();
+                    }
+                }
+            );
         }
     }
 );
