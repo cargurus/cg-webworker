@@ -1,6 +1,36 @@
 # CG-WebWorker
 A little bit of sugar to make apps powered by webworkers more tolerable.
 
+- [CG-WebWorker](#cg-webworker)
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Queries](#queries)
+    - [QueryRegistry (TypeScript only; you can skip if just using JS)](#queryregistry-typescript-only-you-can-skip-if-just-using-js)
+    - [WorkerContext (TypeScript only; you can skip if just using JS)](#workercontext-typescript-only-you-can-skip-if-just-using-js)
+    - [Worker services](#worker-services)
+    - [ServiceRegistry](#serviceregistry)
+    - [The Worker Entry](#the-worker-entry)
+    - [The Worker Client](#the-worker-client)
+    - [Make the call!](#make-the-call)
+    - [Webpack config](#webpack-config)
+  - [Usage with a datastore (like Redux)](#usage-with-a-datastore-like-redux)
+    - [Configuring](#configuring)
+      - [Update context with datastore](#update-context-with-datastore)
+      - [Update QueryRegistry to accept datastore messages](#update-queryregistry-to-accept-datastore-messages)
+      - [Update ServiceRegistry to route datastore requests](#update-serviceregistry-to-route-datastore-requests)
+      - [Setup your datastore as normal](#setup-your-datastore-as-normal)
+      - [Wire the store into the worker during initialization](#wire-the-store-into-the-worker-during-initialization)
+      - [Add a data client](#add-a-data-client)
+    - [Make the call!](#make-the-call-1)
+    - [Hooks to easily update React](#hooks-to-easily-update-react)
+      - [React Batch Middleware setup](#react-batch-middleware-setup)
+  - [Advanced Usage](#advanced-usage)
+    - [Middleware](#middleware)
+    - [Globals in your codebase](#globals-in-your-codebase)
+    - [polyfills](#polyfills)
+    - [Transferrables](#transferrables)
+    - [Usage with IE11](#usage-with-ie11)
+
 ## Install
 Use your favorite package manager to install the `cg-webworker` npm package. `yarn add cg-webworker` or `npm install cg-webworker`.
 
