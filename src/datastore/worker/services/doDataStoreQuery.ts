@@ -13,11 +13,6 @@ export const doDataStoreQuery = <
     ctx: TContext
 ): Promise<ReturnType<typeof dataStoreQueryResponse>> => {
     return new Promise((resolve, reject) => {
-        if (!request.query || request.query.length === 0) {
-            reject(new Error('No query specified'));
-            return;
-        }
-
         if (!ctx.datastore) {
             reject(new Error('DataStore not initialized.'));
             return;
@@ -27,3 +22,12 @@ export const doDataStoreQuery = <
         resolve(dataStoreQueryResponse(queryObj));
     });
 };
+
+export const doDataStoreFilter = <
+    TRootState extends BaseRootState,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    TContext extends BaseContext<any> & DatastoreContext<TRootState>
+>(
+    request: ReturnType<typeof dataStoreQueryRequest>['payload'],
+    ctx: TContext
+): Promise<ReturnType<typeof dataStoreQueryResponse>> => {};

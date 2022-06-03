@@ -1,7 +1,7 @@
 import { BaseRootState } from './BaseRootState';
 import { QueryKey } from './QueryKey';
 
-export const query = <TState extends BaseRootState>(traverseFunc: (state: TState) => unknown): Query => {
+export const query = <TState extends BaseRootState>(traverseFunc: (state: TState) => unknown): QueryByPathNode => {
     const query: Query = { q: 'proxy', path: [] };
 
     const nestedProxy = new Proxy(() => {}, {
@@ -49,9 +49,10 @@ export const query = <TState extends BaseRootState>(traverseFunc: (state: TState
     return query;
 };
 
-export type Query =
-    | {
-          q: 'proxy';
-          path: ({ type: 'FUNC'; argumentsList: QueryKey[] } | { type: 'PROP'; propKey: string })[];
-      }
-    | { q: 'keys'; query: QueryKey[] };
+export type QueryPathNode = { type: 'FUNC'; argumentsList: QueryKey[] } | { type: 'PROP'; propKey: string };
+export type QueryByPathNode = {
+    q: 'proxy';
+    path: QueryPathNode[];
+};
+export type QueryByPropKey = { q: 'keys'; query: QueryKey[] };
+export type Query = QueryByPathNode | QueryByPropKey;

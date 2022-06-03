@@ -3,6 +3,8 @@ import type {
     DATASTORE_WORKERMESSAGE_KEYS,
     dataStoreQueryRequest,
     dataStoreQueryResponse,
+    dataStoreFilterRequest,
+    dataStoreFilterResponse,
     dataStoreSubscribeRequest,
     dataStoreSubscribeResponse,
     dataStoreUnsubscribeRequest,
@@ -18,6 +20,10 @@ export interface DatastoreQueryRegistry extends QueryRegistry<any> {
     [DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_QUERY]: WorkerQuery<
         typeof dataStoreQueryRequest,
         typeof dataStoreQueryResponse
+    >;
+    [DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_FILTER]: WorkerQuery<
+        typeof dataStoreFilterRequest,
+        typeof dataStoreFilterResponse
     >;
     [DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_SUBSCRIBE]: WorkerQuery<
         typeof dataStoreSubscribeRequest,

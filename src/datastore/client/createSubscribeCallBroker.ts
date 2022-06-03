@@ -5,7 +5,7 @@ import {
     dataStoreSubscribeResponse,
     dataStoreUnsubscribeRequest,
 } from '../messaging/datastore.workerMessages';
-import { QueryKey } from '../messaging/QueryKey';
+import { Query } from '../messaging/Query';
 import { setupNotifySubscriberListener } from './setupNotifySubscriberListener';
 import { ClientDatastoreSubscriberMiddleware } from './ClientDatastoreSubscriberMiddleware';
 import { compatibilitySubscriberMiddleware } from './compatibility/compatibilitySubscriberMiddleware';
@@ -14,11 +14,11 @@ import { Unsubscribe } from './Unsubscribe';
 
 export type SubscribeCallBroker = {
     readonly onData: <TData>(
-        query: QueryKey[],
+        query: Query,
         callback: (data: TData) => void,
         onError?: (ex: Error) => void
     ) => Unsubscribe;
-    readonly onChange: (query: QueryKey[], callback: () => void, onError?: (ex: Error) => void) => Unsubscribe;
+    readonly onChange: (query: Query, callback: () => void, onError?: (ex: Error) => void) => Unsubscribe;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,11 +36,7 @@ export const createSubscribeCallBroker = <TQueryRegistry extends DatastoreQueryR
     setupNotifySubscriberListener(worker, dataSubscribers, changeSubscribers, middleware);
 
     return {
-        onData: <TData>(
-            query: QueryKey[],
-            callback: (data: TData) => void,
-            onError?: (ex: Error) => void
-        ): Unsubscribe => {
+        onData: <TData>(query: Query, callback: (data: TData) => void, onError?: (ex: Error) => void): Unsubscribe => {
             const subscriberId = generateRequestId();
             dataSubscribers.set(subscriberId, { onData: callback, onError });
 
@@ -64,7 +60,7 @@ export const createSubscribeCallBroker = <TQueryRegistry extends DatastoreQueryR
                 });
             };
         },
-        onChange: (query: QueryKey[], callback: () => void, onError?: (ex: Error) => void): Unsubscribe => {
+        onChange: (query: Query, callback: () => void, onError?: (ex: Error) => void): Unsubscribe => {
             const subscriberId = generateRequestId();
             changeSubscribers.set(subscriberId, { onChange: callback, onError });
 

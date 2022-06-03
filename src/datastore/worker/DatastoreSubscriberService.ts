@@ -1,4 +1,4 @@
-import { QueryKey } from '../messaging/QueryKey';
+import { Query } from '../messaging/Query';
 import { cloneResult } from './utils/cloneResult';
 import { executeDataStoreQuery } from './services/executeDataStoreQuery';
 import { Changes } from '../messaging/Changes';
@@ -6,13 +6,13 @@ import { Changes } from '../messaging/Changes';
 export class DataStoreSubscriberService<TRootState> {
     public readonly getRootState: () => TRootState;
 
-    private readonly dataSubscribers: Map<string, { query: QueryKey[]; lastResult: any }>; // eslint-disable-line @typescript-eslint/no-explicit-any
-    private readonly changeSubscribers: Map<string, { query: QueryKey[]; lastResult: any }>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    private readonly dataSubscribers: Map<string, { query: Query; lastResult: any }>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    private readonly changeSubscribers: Map<string, { query: Query; lastResult: any }>; // eslint-disable-line @typescript-eslint/no-explicit-any
     private readonly onChanges: (changes: Changes) => void;
 
     public constructor(getRootState: () => TRootState, onChanges: (changes: Changes) => void) {
-        this.dataSubscribers = new Map<string, { query: QueryKey[]; lastResult: any }>(); // eslint-disable-line @typescript-eslint/no-explicit-any
-        this.changeSubscribers = new Map<string, { query: QueryKey[]; lastResult: any }>(); // eslint-disable-line @typescript-eslint/no-explicit-any
+        this.dataSubscribers = new Map<string, { query: Query; lastResult: any }>(); // eslint-disable-line @typescript-eslint/no-explicit-any
+        this.changeSubscribers = new Map<string, { query: Query; lastResult: any }>(); // eslint-disable-line @typescript-eslint/no-explicit-any
         this.getRootState = getRootState;
         this.onChanges = onChanges;
 
@@ -25,7 +25,7 @@ export class DataStoreSubscriberService<TRootState> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public subscribeData(subscriberId: string, query: QueryKey[], firstResult: any): void {
+    public subscribeData(subscriberId: string, query: Query, firstResult: any): void {
         this.dataSubscribers.set(subscriberId, { query, lastResult: firstResult });
     }
 
@@ -34,7 +34,7 @@ export class DataStoreSubscriberService<TRootState> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public subscribeChanges(subscriberId: string, query: QueryKey[], firstResult: any): void {
+    public subscribeChanges(subscriberId: string, query: Query, firstResult: any): void {
         this.changeSubscribers.set(subscriberId, { query, lastResult: firstResult });
     }
 
