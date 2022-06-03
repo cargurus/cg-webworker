@@ -44,7 +44,7 @@ You'll setup a QueryRegistry and a ServiceRegistry, then configure your worker c
 ### Queries
 Query request and response types are a simple shape, much like a redux action. We send a request to the worker, and it will send back a response.
 
-```
+```ts
 import { createWorkerMessage } from 'cg-webworker/core';
 
 // Queries.ts
@@ -60,7 +60,7 @@ export const exampleResponse = (success: boolean) => createWorkerMessage({ type:
 ### QueryRegistry (TypeScript only; you can skip if just using JS)
 The QueryRegistry is to match request types to response types, to make sure you're returning the right types. 
 
-```
+```ts
 // ExampleQueryRegistry.ts
 import type { WorkerQuery } from 'cg-webworker/core';
 import type {
@@ -77,7 +77,7 @@ export interface ExampleQueryRegistry {
 ### WorkerContext (TypeScript only; you can skip if just using JS)
 The WorkerContext can be extended to carry all your persistent state. It might be empty if you've got no need of that. Often, it is used to give access to a datastore, like Redux ([more on that below](#usage-with-a-datastore-like-redux)).
 
-```
+```ts
 // ExampleContext.ts
 import type { BaseContext } from 'cg-webworker/core';
 import type { ExampleQueryRegistry } from './ExampleQueryRegistry';
@@ -87,7 +87,7 @@ export type ExampleContext = { logger: (textToLog: string) => void } & BaseConte
 
 ### Worker services
 Worker services are functions that take a request payload and the worker context as parameters, and return a response; or throw an error if you like - the worker client will receive the exception and raise it to the calling component, triggering your catch block or promise.catch() callback.
-```
+```ts
 import { exampleRequest, exampleResponse } from './Queries';
 import { ExampleContext } from './ExampleContext';
 
@@ -104,7 +104,7 @@ export const exampleService = async (
 
 ### ServiceRegistry
 The ServiceRegistry matches request types to the function that you'll be calling. Easy.
-```
+```ts
 // ExampleServiceRegistry.ts
 import type { ExampleQueryRegistry } from './ExampleQueryRegistry';
 import type { ExampleContext } from './ExampleContext';
@@ -123,7 +123,7 @@ Now we create the webworker-side of the connection, an entrypoint that will setu
 * and an initialization function, to setup any dependencies you have.
 
 The most important part is the service registry import, particularly if you have a well established codebase. Using the webpack eager import (or whatever mechanism you use that provides similar functionality) will mean that your codebase's module-scoped code isn't executed until the import occurs, which lets us run the initialization function, to setup any dependencies first. The most common scenario is files using globals from the window, which won't exist in the worker thread until we create them.
-```
+```ts
 // ExampleWorker.worker.ts
 import { setupWorkerCallBroker, WebWorker } from 'cg-webworker/core';
 import type { ExampleQueryRegistry } from './ExampleQueryRegistry';
@@ -163,7 +163,7 @@ setupWorkerCallBroker<ExampleQueryRegistry, ExampleContext, typeof ExampleServic
 
 ### The Worker Client
 The other side of the worker connection is the Worker Client. We create a provider, so that there is just one instance of the worker created.
-```
+```ts
 // exampleClient.ts
 import {
     workerProvider,
@@ -191,7 +191,7 @@ export const exampleClient = <TRequest extends AllRequestsOf<ExampleQueryRegistr
 ```
 
 ### Make the call!
-```
+```ts
 // Some file
 import { exampleClient } from './exampleClient';
 import { exampleRequest } from './Queries';
@@ -204,7 +204,7 @@ export async function somethingUseful() {
 
 ### Webpack config
 Use a convention to recognize your worker entry file as something to use worker-loader on. I use the file segment ".worker." to help.
-```
+```ts
 // webpack.config.js
 
 module.exports = {
@@ -245,7 +245,7 @@ You can use the cg-webworker/datastore library to easily do this.
 You'll just need to declare our state, then update your context, ServiceRegistry, and some simple initialization.
 
 #### Update context with datastore
-```
+```ts
 // ExampleContext.ts
 import type { BaseContext } from 'cg-webworker/core';
 import type { ExampleQueryRegistry } from './ExampleQueryRegistry';
@@ -260,7 +260,7 @@ export type ExampleContext = {
     & DatastoreContext<RootState>;  // Our context now has props to help manage datastore subscribers etc.
 ```
 #### Update QueryRegistry to accept datastore messages
-```
+```ts
 import type { WorkerQuery } from 'cg-webworker/core';
 import type { DatastoreQueryRegistry } from 'cg-webworker/datastore';
 import type {
@@ -275,7 +275,7 @@ export interface ExampleQueryRegistry extends DatastoreQueryRegistry {
 }
 ```
 #### Update ServiceRegistry to route datastore requests
-```
+```ts
 // ExampleServiceRegistry.ts
 import { DatastoreServiceRegistry } from 'cg-webworker/datastore';
 import type { ExampleQueryRegistry } from './ExampleQueryRegistry';
@@ -292,7 +292,7 @@ export const ExampleServiceRegistry: ServiceRegistry<ExampleQueryRegistry, Examp
 #### Setup your datastore as normal
 Setup your datastore the way you noramlly would. For redux, we'll declare the rootstate, some actions, and a reducer.
 **State**
-```
+```ts
 // RootState.ts
 export interface RootState {
     lastMessage: string | null;
@@ -300,7 +300,7 @@ export interface RootState {
 }
 ```
 **Actions**
-```
+```ts
 // actions.ts
 export const ACTION_TYPES = {
     SET_LAST_MESSAGE: 'LAST_MESSAGE/SET',
@@ -312,7 +312,7 @@ export const addLogTime = (logTime: Date) => ({ type: ACTION_TYPES.ADD_LOG_TIME,
 export type RootAction = ReturnType<typeof setLastMessage> | ReturnType<typeof addLogTime>;
 ```
 **Reducer**
-```
+```ts
 // rootReducer.ts
 import { RootAction, ACTION_TYPES } from './actions';
 import { RootState } from './RootState';
@@ -341,7 +341,7 @@ export const rootReducer = (state: RootState = getDefaultRootState(), action: Ro
 };
 ```
 #### Wire the store into the worker during initialization
-```
+```ts
 // ExampleWorker.worker.ts
 import { createStore } from 'redux';
 import { setupWorkerCallBroker, WebWorker } from 'cg-webworker/core';
@@ -402,7 +402,7 @@ setupWorkerCallBroker<ExampleQueryRegistry, ExampleContext, typeof ExampleServic
 
 #### Add a data client
 Our initial worker client handles the normal request + response style behaviour, but we need another client to listen for the changes and continue to give notifications.
-```
+```ts
 // exampleClient.ts
 import {
     workerProvider,
@@ -434,7 +434,7 @@ export const exampleSubscribeClient = createSubscribeCallBroker<ExampleQueryRegi
 ### Make the call!
 Use prop names to query into the datastore.
 
-```
+```ts
 // Some file
 import { exampleClient, exampleSubscribeClient } from './exampleClient';
 import { exampleRequest } from './Queries';
@@ -465,7 +465,7 @@ export function doSomethingWhenDataChanges() {
 
 ### Hooks to easily update React
 For ease of setup, there are hooks to update React components, and a middleware to apply the updates in batch.
-```
+```ts
 // SomeComponent.tsx
 import * as React from 'react';
 import { useSubscribeChange, useSubscribeData } from 'cg-webworker/react';
@@ -493,7 +493,7 @@ export const SomeComponent = () => {
 
 #### React Batch Middleware setup
 Apply same as any middleware when setting up the datastore client:
-```
+```ts
 // exampleClient.ts
 import {
     workerProvider,
