@@ -1,4 +1,4 @@
-import { QueryKey } from '../messaging/makeQuery';
+import { QueryKey } from '../messaging/QueryKey';
 import { cloneResult } from './utils/cloneResult';
 import { executeDataStoreQuery } from './services/executeDataStoreQuery';
 import { Changes } from '../messaging/Changes';

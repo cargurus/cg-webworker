@@ -1,14 +1,5 @@
 import { BaseRootState } from './BaseRootState';
 
-export type QueryKey =
-    | string
-    | number
-    | Date
-    | null
-    | undefined
-    | boolean
-    | (string | number | Date | null | undefined | boolean)[];
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MapResultOrKeyOf<T> = T extends ReadonlyMap<infer U, any> ? U | U[] : keyof T;
 

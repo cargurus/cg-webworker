@@ -5,7 +5,7 @@ import {
     dataStoreSubscribeResponse,
     dataStoreUnsubscribeRequest,
 } from '../messaging/datastore.workerMessages';
-import { QueryKey } from '../messaging/makeQuery';
+import { QueryKey } from '../messaging/QueryKey';
 import { setupNotifySubscriberListener } from './setupNotifySubscriberListener';
 import { ClientDatastoreSubscriberMiddleware } from './ClientDatastoreSubscriberMiddleware';
 import { compatibilitySubscriberMiddleware } from './compatibility/compatibilitySubscriberMiddleware';

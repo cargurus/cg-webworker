@@ -1,5 +1,5 @@
 import { createWorkerMessage, SendableObj, SendableValue } from 'cg-webworker/core';
-import { QueryKey } from './makeQuery';
+import { QueryKey } from './QueryKey';
 
 export const DATASTORE_WORKERMESSAGE_KEYS = {
     /**
