@@ -19,6 +19,7 @@ export {
     DataStoreQueryRequestActions,
     DataStoreQueryResponseActions,
 } from './datastore.workerMessages';
-export { makeQuery, QueryKey } from './makeQuery';
+export { queryByProps } from './queryByProps';
+export { query, Query } from './query';
 export { SubscriberResponseMessage } from './SubscriberResponseMessage';
 export { DatastoreQueryRegistry } from './DatastoreQueryRegistry';
