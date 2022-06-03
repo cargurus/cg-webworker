@@ -13,6 +13,9 @@ export const query = <TState extends BaseRootState>(traverseFunc: (state: TState
             return nestedProxy;
         },
         apply: function (target, thisArg, argumentsList) {
+            if (argumentsList.some((a) => typeof a === 'function' || typeof a === 'symbol')) {
+                throw new Error('Functions and symbols cannot be passed as arguments.');
+            }
             query.path.push({ type: 'FUNC', argumentsList: argumentsList });
             return nestedProxy;
         },
@@ -32,6 +35,9 @@ export const query = <TState extends BaseRootState>(traverseFunc: (state: TState
         apply(target, thisArg, argumentsList) {
             if (query.path.length !== 0) {
                 throw new Error('Can only reference state once when creating query.');
+            }
+            if (argumentsList.some((a) => typeof a === 'function' || typeof a === 'symbol')) {
+                throw new Error('Functions and symbols cannot be passed as arguments.');
             }
             query.path.push({ type: 'FUNC', argumentsList: argumentsList });
             return nestedProxy;

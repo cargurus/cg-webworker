@@ -58,7 +58,7 @@ describe('makeQueryProxy', () => {
             ],
         });
     });
-    it('should work for Set functions like "get"', () => {
+    it('should work for Set functions like "has"', () => {
         type State = {
             asdf: Set<string>;
             nums: Set<number>;
@@ -94,6 +94,16 @@ describe('makeQueryProxy', () => {
                 { type: 'FUNC', argumentsList: ['some val'] },
             ],
         });
+    });
+
+    it('should throw an error for Array functions like "some"', () => {
+        type State = {
+            asdf: string[];
+            nums: number[];
+        };
+        expect(() => query((state: State) => state.asdf.some((e) => e))).toThrowError(
+            'Functions and symbols cannot be passed as arguments.'
+        );
     });
 
     it('should work for Array indexing', () => {
