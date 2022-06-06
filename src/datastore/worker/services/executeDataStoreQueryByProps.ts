@@ -1,10 +1,12 @@
+import { SendableValue } from 'cg-webworker/core';
 import { QueryKey } from '../../messaging/QueryKey';
 import { BaseRootState } from '../../messaging/BaseRootState';
 
-export function executeDataStoreQueryByProps<TRootState extends BaseRootState>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function executeDataStoreQueryByProps<TRootState extends BaseRootState, TResult extends SendableValue<any>>(
     getRootState: () => TRootState,
     query: QueryKey[]
-) {
+): TResult {
     if (!query || query.length === 0) {
         throw new Error('No query specified');
     }
@@ -13,7 +15,7 @@ export function executeDataStoreQueryByProps<TRootState extends BaseRootState>(
         throw new Error(`'query' must be Array of QueryKeys`);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let queryObj: Record<string, any> | Map<any, any> | Set<any> = getRootState();
+    let queryObj: undefined | null | SendableValue<any> = getRootState();
 
     query.forEach((queryParam, queryKeyDepth) => {
         if (queryObj instanceof Map) {
@@ -24,7 +26,7 @@ export function executeDataStoreQueryByProps<TRootState extends BaseRootState>(
                     throw new Error('Cannot navigate nested properties');
                 }
                 queryObj = queryParam.reduce((accum, q) => {
-                    if (!queryObj.has(q)) {
+                    if (!queryObj!.has(q)) {
                         return accum;
                     }
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any

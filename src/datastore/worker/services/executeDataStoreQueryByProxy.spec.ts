@@ -30,6 +30,11 @@ describe('executeDataStoreQueryByProxy', () => {
                 carYear: number;
             }
         >;
+        config: {
+            accountReady: boolean;
+            name: string;
+            products: number[];
+        };
     };
 
     let dataStore: ExampleDataStore;
@@ -75,6 +80,11 @@ describe('executeDataStoreQueryByProxy', () => {
                     },
                 ],
             ]),
+            config: {
+                accountReady: true,
+                name: 'Great Place',
+                products: [4, 5, 6, 7],
+            },
         } as ExampleDataStore;
         context = {
             datastore: new DataStoreSubscriberService(() => dataStore, jest.fn()),
@@ -202,5 +212,63 @@ describe('executeDataStoreQueryByProxy', () => {
                 carYear: 2006,
             },
         ]);
+    });
+
+    it('should return indexes in an array', () => {
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config.products[0]).path
+            )
+        ).toEqual(4);
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config.products[3]).path
+            )
+        ).toEqual(7);
+    });
+    it('should return undefined for non-existent array index', () => {
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config.products[4]).path
+            )
+        ).toEqual(undefined);
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config.products[-1]).path
+            )
+        ).toEqual(undefined);
+    });
+
+    it('should return obj', () => {
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config).path
+            )
+        ).toEqual({
+            accountReady: true,
+            name: 'Great Place',
+            products: [4, 5, 6, 7],
+        });
+    });
+    it('should return props of obj', () => {
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => state.config.accountReady).path
+            )
+        ).toEqual(true);
+    });
+    it("should return undefined when obj prop doesn't exist", () => {
+        expect(
+            executeDataStoreQueryByProxy(
+                context.datastore.getRootState,
+                query((state: ExampleDataStore) => (state.config as any).nonExist).path
+            )
+        ).toEqual(undefined);
     });
 });

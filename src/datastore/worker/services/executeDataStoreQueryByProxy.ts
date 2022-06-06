@@ -1,3 +1,4 @@
+import { SendableValue } from 'cg-webworker/core';
 import { BaseRootState } from '../../messaging/BaseRootState';
 import { QueryPathNode } from '../../messaging/query';
 
@@ -6,10 +7,11 @@ function isNumeric(str: string): boolean {
     return !isNaN(str as unknown as number) && !isNaN(parseFloat(str));
 }
 
-export function executeDataStoreQueryByProxy<TRootState extends BaseRootState>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function executeDataStoreQueryByProxy<TRootState extends BaseRootState, TResult extends SendableValue<any>>(
     getRootState: () => TRootState,
     query: QueryPathNode[]
-) {
+): TResult {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const rootState: Record<string, any> | Map<any, any> | Set<any> = getRootState();
     if (rootState == null) {
@@ -37,7 +39,7 @@ export function executeDataStoreQueryByProxy<TRootState extends BaseRootState>(
         Set.prototype.values,
     ]);
 
-    let queryObj = rootState;
+    let queryObj: unknown = rootState;
 
     let owningObj = queryObj;
     query.forEach((q, i) => {
@@ -55,8 +57,7 @@ export function executeDataStoreQueryByProxy<TRootState extends BaseRootState>(
                 const expand = iterablesToExpand.has(queryObj);
                 queryObj = queryObj.apply(owningObj, q.argumentsList);
                 if (expand) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    queryObj = Array.from(queryObj as Iterable<any>);
+                    queryObj = Array.from(queryObj as Iterable<unknown>);
                 }
                 break;
             }
@@ -67,18 +68,16 @@ export function executeDataStoreQueryByProxy<TRootState extends BaseRootState>(
                         if (isNumeric(q.propKey)) {
                             queryObj = queryObj[Number(q.propKey)];
                         } else {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            queryObj = queryObj[q.propKey];
+                            queryObj = queryObj[q.propKey as keyof []];
                         }
                     } else {
-                        throw new Error(`Index ${q.propKey} at query depth ${i} not found in array.`);
+                        queryObj = undefined;
                     }
                 } else if (typeof queryObj === 'object') {
-                    if (q.propKey in queryObj) {
-                        queryObj = queryObj[q.propKey];
+                    if (q.propKey in queryObj!) {
+                        queryObj = queryObj![q.propKey as keyof typeof queryObj];
                     } else {
-                        throw new Error(`Prop/index '${q.propKey}' at query depth ${i} not found.`);
+                        queryObj = undefined;
                     }
                 } else {
                     throw new Error(`Unsupported collection/prop type encountered at depth ${i}: ${typeof queryObj}`);
@@ -88,5 +87,6 @@ export function executeDataStoreQueryByProxy<TRootState extends BaseRootState>(
         }
     });
 
-    return queryObj;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return queryObj as SendableValue<any>;
 }
