@@ -2,8 +2,8 @@ import { SendableValue } from 'cg-webworker/core';
 import { BaseRootState } from './BaseRootState';
 import { QueryKey } from './QueryKey';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const query = <TState extends BaseRootState>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     traverseFunc: (state: TState) => SendableValue<any>
 ): QueryByPathNode => {
     const query: Query = { q: 'proxy', path: [] };

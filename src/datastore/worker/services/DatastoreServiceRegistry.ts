@@ -1,7 +1,8 @@
 import { DATASTORE_WORKERMESSAGE_KEYS } from '../../messaging/datastore.workerMessages';
-import { doDataStoreFilter, doDataStoreQuery } from './doDataStoreQuery';
-import { doSubscribeData, doSubscribeNotify } from './doSubscribe';
-import { doUnsubscribeNotify, doUnsubscribeData } from './doUnsubscribe';
+import { doDataStoreQuery } from './querying/doDataStoreQuery';
+import { doDataStoreFilter } from './filtering/doDataStoreFilter';
+import { doSubscribeData, doSubscribeNotify } from './subscription/doSubscribe';
+import { doUnsubscribeNotify, doUnsubscribeData } from './subscription/doUnsubscribe';
 
 export const DatastoreServiceRegistry = {
     [DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_QUERY]: doDataStoreQuery,

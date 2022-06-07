@@ -1,6 +1,6 @@
 import { SendableObj } from 'cg-webworker/core';
-import { BaseRootState } from '../../messaging/BaseRootState';
-import { Query } from '../../messaging/query';
+import { BaseRootState } from '../../../messaging/BaseRootState';
+import { Query } from '../../../messaging/query';
 import { executeDataStoreQueryByProps } from './executeDataStoreQueryByProps';
 import { executeDataStoreQueryByProxy } from './executeDataStoreQueryByProxy';
 
@@ -14,6 +14,6 @@ export function executeDataStoreQuery<TRootState extends BaseRootState, TResult 
             return executeDataStoreQueryByProps(getRootState, query.query);
         case 'proxy':
         default:
-            return executeDataStoreQueryByProxy(getRootState, query.path);
+            return executeDataStoreQueryByProxy(getRootState(), query.path);
     }
 }

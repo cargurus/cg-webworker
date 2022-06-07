@@ -4,10 +4,10 @@ import {
     dataStoreChangeNotifySubscribeResponse,
     dataStoreSubscribeRequest,
     dataStoreSubscribeResponse,
-} from '../../messaging/datastore.workerMessages';
-import { executeDataStoreQuery } from './executeDataStoreQuery';
-import { DatastoreContext } from '../DatastoreContext';
-import { BaseRootState } from '../../messaging/BaseRootState';
+} from '../../../messaging/datastore.workerMessages';
+import { executeDataStoreQuery } from '../querying/executeDataStoreQuery';
+import { DatastoreContext } from '../../DatastoreContext';
+import { BaseRootState } from '../../../messaging/BaseRootState';
 
 export const doSubscribeData = <
     TRootState extends BaseRootState,

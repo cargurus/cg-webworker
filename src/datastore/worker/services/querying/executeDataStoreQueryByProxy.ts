@@ -1,6 +1,6 @@
 import { SendableValue } from 'cg-webworker/core';
-import { BaseRootState } from '../../messaging/BaseRootState';
-import { QueryPathNode } from '../../messaging/query';
+import { BaseRootState } from '../../../messaging/BaseRootState';
+import { QueryPathNode } from '../../../messaging/query';
 
 function isNumeric(str: string): boolean {
     // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -8,13 +8,12 @@ function isNumeric(str: string): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function executeDataStoreQueryByProxy<TRootState extends BaseRootState, TResult extends SendableValue<any>>(
-    getRootState: () => TRootState,
+export function executeDataStoreQueryByProxy<TResult extends SendableValue<any>>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    queryNode: Record<string, any> | Map<any, any> | Set<any>,
     query: QueryPathNode[]
 ): TResult {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rootState: Record<string, any> | Map<any, any> | Set<any> = getRootState();
-    if (rootState == null) {
+    if (queryNode == null) {
         throw new Error('Root state is null/undefined.');
     }
 
@@ -39,7 +38,7 @@ export function executeDataStoreQueryByProxy<TRootState extends BaseRootState, T
         Set.prototype.values,
     ]);
 
-    let queryObj: unknown = rootState;
+    let queryObj: unknown = queryNode;
 
     let owningObj = queryObj;
     query.forEach((q, i) => {

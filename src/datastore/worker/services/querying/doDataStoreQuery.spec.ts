@@ -1,7 +1,7 @@
 import { BaseContext } from 'cg-webworker/core';
-import { dataStoreQueryRequest, Query } from '../../messaging';
-import { DatastoreContext } from '../DatastoreContext';
-import { DataStoreSubscriberService } from '../DatastoreSubscriberService';
+import { dataStoreQueryRequest, Query } from '../../../messaging';
+import { DatastoreContext } from '../../DatastoreContext';
+import { DataStoreSubscriberService } from '../../DatastoreSubscriberService';
 import { doDataStoreQuery } from './doDataStoreQuery';
 
 type ExampleDataStore = {

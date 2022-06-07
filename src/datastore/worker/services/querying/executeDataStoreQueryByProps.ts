@@ -1,6 +1,6 @@
 import { SendableValue } from 'cg-webworker/core';
-import { QueryKey } from '../../messaging/QueryKey';
-import { BaseRootState } from '../../messaging/BaseRootState';
+import { QueryKey } from '../../../messaging/QueryKey';
+import { BaseRootState } from '../../../messaging/BaseRootState';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function executeDataStoreQueryByProps<TRootState extends BaseRootState, TResult extends SendableValue<any>>(

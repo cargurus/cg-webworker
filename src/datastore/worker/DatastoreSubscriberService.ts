@@ -1,6 +1,6 @@
 import { Query } from '../messaging/Query';
 import { cloneResult } from './utils/cloneResult';
-import { executeDataStoreQuery } from './services/executeDataStoreQuery';
+import { executeDataStoreQuery } from './services/querying/executeDataStoreQuery';
 import { Changes } from '../messaging/Changes';
 
 export class DataStoreSubscriberService<TRootState> {
@@ -83,6 +83,7 @@ export class DataStoreSubscriberService<TRootState> {
 
             if (newResult != lastResult) {
                 dataNotifications.set(subscriberId, newResult);
+                // TODO: If store objects are immutable, then we don't need to cloneResult
                 this.dataSubscribers.set(subscriberId, { query, lastResult: cloneResult(newResult) });
             }
         }
@@ -93,6 +94,7 @@ export class DataStoreSubscriberService<TRootState> {
 
             if (newResult != lastResult) {
                 changeNotifications.push(subscriberId);
+                // TODO: If store objects are immutable, then we don't need to cloneResult
                 this.changeSubscribers.set(subscriberId, { query, lastResult: cloneResult(newResult) });
             }
         }

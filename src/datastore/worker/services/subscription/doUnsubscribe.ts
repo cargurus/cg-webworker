@@ -4,8 +4,8 @@ import {
     dataStoreChangeNotifyUnsubscribeResponse,
     dataStoreUnsubscribeRequest,
     dataStoreUnsubscribeResponse,
-} from '../../messaging/datastore.workerMessages';
-import { DatastoreContext } from '../DatastoreContext';
+} from '../../../messaging/datastore.workerMessages';
+import { DatastoreContext } from '../../DatastoreContext';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const doUnsubscribeData = <TContext extends BaseContext<any> & DatastoreContext<any>>(

@@ -1,6 +1,8 @@
 import { createWorkerMessage, SendableObj, SendableValue } from 'cg-webworker/core';
 import { BaseRootState } from './BaseRootState';
-import { Query, query as makeQuery } from './query';
+import { CompareVal } from './CompareVal';
+import { DataStoreFilterResultQueryOp, DataStoreFilterResultQuerySet } from './DataStoreFilterResultQuerySet';
+import { Query, query as makeQuery, QueryByPathNode } from './query';
 
 export const DATASTORE_WORKERMESSAGE_KEYS = {
     /**
@@ -39,47 +41,69 @@ export const dataStoreQueryRequest = (query: Query) =>
     });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const dataStoreQueryResponse = <T extends SendableObj<any>>(resultObject: T) =>
+export const dataStoreQueryResponse = <T extends SendableValue<any>>(result: T) =>
     createWorkerMessage({
         type: DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_QUERY,
-        payload: resultObject,
-    });
-
-type CompareVal = string | number | Date | boolean | null | undefined;
-type RangeLt = { lt: CompareVal };
-type RangeLte = { lte: CompareVal };
-type RangeGt = { gt: CompareVal };
-type RangeGte = { gte: CompareVal };
-type Range =
-    | ((RangeLt | RangeLte) & Partial<RangeGt | RangeGte>)
-    | ((RangeGt | RangeGte) & Partial<RangeLt | RangeLte>);
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const dataStoreFilterRequest = <TState extends BaseRootState, TType extends SendableValue<any>>(
-    querySet: (state: TState) => TType[],
-    query: {
-        filter: (
-            | { prop: keyof TType; eq: CompareVal }
-            | { prop: keyof TType; matches: RegExp }
-            | { prop: keyof TType; in: CompareVal[] }
-            | { prop: keyof TType; notIn: CompareVal[] }
-            | { prop: keyof TType; notEq: CompareVal }
-            | { prop: keyof TType; range: Range; negate?: boolean }
-        )[];
-        map?: {};
-        page?: { size: number; index: number };
-    }
-) =>
-    createWorkerMessage({
-        type: DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_FILTER,
         payload: {
-            querySet: makeQuery(querySet),
-            query,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            result: result as SendableValue<any>,
         },
     });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const dataStoreFilterResponse = <TResult extends SendableObj<TResult>>(result: TResult[]) =>
+type ResultSetFilterQuery<TType extends SendableObj<any>> =
+    | (({ prop: keyof TType } | { query: (resultType: TType) => CompareVal }) & { eq: CompareVal })
+    | (({ prop: keyof TType } | { query: (resultType: TType) => string }) & { matches: RegExp; negate?: boolean })
+    | (({ prop: keyof TType } | { query: (resultType: TType) => CompareVal }) & { in: CompareVal[] })
+    | (({ prop: keyof TType } | { query: (resultType: TType) => CompareVal }) & { notIn: CompareVal[] })
+    | (({ prop: keyof TType } | { query: (resultType: TType) => CompareVal }) & { notEq: CompareVal })
+    | (({ prop: keyof TType } | { query: (resultType: TType) => CompareVal }) & { range: Range; negate?: boolean });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const dataStoreFilterRequest = <TState extends BaseRootState, TType extends SendableObj<any>>(
+    querySet: (state: TState) => DataStoreFilterResultQuerySet<TType>,
+    queryParams: {
+        filter: {
+            predicates: ResultSetFilterQuery<TType>[];
+            op: typeof DataStoreFilterResultQueryOp[keyof typeof DataStoreFilterResultQueryOp];
+            negate?: boolean;
+        };
+        map?: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            [propName: string]: (resultType: TType) => SendableValue<any>;
+        };
+        page?: { size: number; index: number };
+    }
+) => {
+    const map = queryParams.map
+        ? Object.entries(queryParams.map).reduce((accum, [propName, mapFunction]) => {
+              accum[propName] = makeQuery(mapFunction);
+              return accum;
+          }, {} as Record<string, QueryByPathNode>)
+        : undefined;
+
+    const predicates = queryParams.filter.predicates.map((f) =>
+        'prop' in f ? f : { ...f, query: makeQuery(f.query) }
+    );
+
+    return createWorkerMessage({
+        type: DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_FILTER,
+        payload: {
+            querySet: makeQuery(querySet),
+            queryParams: {
+                filter: {
+                    ...queryParams.filter,
+                    predicates,
+                },
+                map: map,
+                page: queryParams.page,
+            },
+        },
+    });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const dataStoreFilterResponse = <TResult extends SendableValue<any>>(result: TResult[]) =>
     createWorkerMessage({
         type: DATASTORE_WORKERMESSAGE_KEYS.DATA_STORE_FILTER,
         payload: {
@@ -151,12 +175,14 @@ export const dataStoreChangeNotifyUnsubscribeResponse = () =>
 
 export type DataStoreQueryRequestActions =
     | ReturnType<typeof dataStoreQueryRequest>
+    | ReturnType<typeof dataStoreFilterRequest>
     | ReturnType<typeof dataStoreSubscribeRequest>
     | ReturnType<typeof dataStoreUnsubscribeRequest>
     | ReturnType<typeof dataStoreChangeNotifySubscribeRequest>
     | ReturnType<typeof dataStoreChangeNotifyUnsubscribeRequest>;
 export type DataStoreQueryResponseActions =
     | ReturnType<typeof dataStoreQueryResponse>
+    | ReturnType<typeof dataStoreFilterResponse>
     | ReturnType<typeof dataStoreSubscribeResponse>
     | ReturnType<typeof dataStoreUnsubscribeResponse>
     | ReturnType<typeof dataStoreChangeNotifySubscribeResponse>

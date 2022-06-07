@@ -1,8 +1,8 @@
 import { BaseContext } from 'cg-webworker/core';
-import { QueryKey } from 'messaging/QueryKey';
-import { dataStoreQueryRequest, Query } from '../../messaging';
-import { DatastoreContext } from '../DatastoreContext';
-import { DataStoreSubscriberService } from '../DatastoreSubscriberService';
+import { QueryKey } from '../../../messaging/QueryKey';
+import { dataStoreQueryRequest, Query } from '../../../messaging';
+import { DatastoreContext } from '../../DatastoreContext';
+import { DataStoreSubscriberService } from '../../DatastoreSubscriberService';
 import { executeDataStoreQueryByProps } from './executeDataStoreQueryByProps';
 
 describe('executeDataStoreQueryByPropsByProps', () => {
